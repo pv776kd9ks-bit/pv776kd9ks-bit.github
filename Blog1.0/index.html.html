@@ -1,0 +1,201 @@
+<!DOCTYPE html>  
+<html lang="zh-CN">   <!--lang="zh-CN"表示语言为中文简体-->
+<head>
+    <meta charset="UTF-8">  <!--统一文字编码-->>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!--网页长宽自动适配手机-->
+    <title>我的小博客</title>  <!--网页标签的标题（不是出现在网页里的那个）-->
+    <style>
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }  /* 全局重置（必备） */
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #f5f5f5;   /*#f5f5f5是十六进制色彩表示*/
+            color: #333;
+            transition: background 0.3s, color 0.3s;  /*渐变动画0.3秒*/
+        }
+        /* 深色模式：body 加上 dark 类时生效 */
+        body.dark { background: #1a1a2e; color: #e0e0e0; }
+
+        /* 顶部横幅 */
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);  /*色彩渐变*/
+            color: white;    /*color默认就是字体的color*/
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        /* 导航栏：flex 横排居中，滚动时粘在顶部 */
+        nav {
+            background: white;
+            padding: 10px 20px;
+            display: flex;    /*弹性布局：父元素设flex 子元素依次横向排列*/
+            justify-content: center;
+            gap: 20px;
+            position: sticky;    /*粘性定位：将搜索框黏在网页顶部*/
+            top: 0;     /*黏在距离顶部0的位置*/
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        body.dark nav { background: #16213e; }
+        nav a { color: #667eea; text-decoration: none; cursor: pointer; }
+
+        /* 按钮通用样式 */
+        .btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 6px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* 搜索框 */
+        .search-box {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+        .search-box input:focus { border-color: #667eea; }
+        body.dark .search-box input { background: #16213e; color: #e0e0e0; border-color: #333; }
+
+        /* 文章列表容器：居中、限宽 */
+        .articles { max-width: 700px; margin: 0 auto; padding: 0 20px 40px; }
+
+        /* 单篇文章卡片 */
+        .article-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .article-card:hover { transform: translateY(-2px); }
+        body.dark .article-card { background: #16213e; }
+        .article-card h2 { color: #667eea; font-size: 18px; margin-bottom: 6px; }
+        .article-meta { font-size: 12px; color: #999; margin-bottom: 10px; }
+
+        /* 文章正文：默认隐藏，卡片有 active 类时显示 */
+        .article-content {
+            display: none;    /*正文默认隐藏*/
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+        }
+        .article-card.active .article-content { display: block; }
+        .toggle-hint { font-size: 12px; color: #667eea; margin-top: 8px; }
+
+        /* 搜索无结果提示 */
+        .no-result { text-align: center; padding: 40px; color: #999; display: none; }
+
+        /* 页脚 */
+        footer { text-align: center; padding: 20px; font-size: 12px; color: #999; }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题 -->
+    <header>
+        <h1>我的小博客</h1>
+        <p>记录学习，记录生活 ✨</p>
+    </header>
+
+    <!-- 导航栏 -->
+    <nav>
+        <a>首页</a>
+        <a>文章</a>
+        <a>关于</a>
+        <button class="btn" id="themeBtn">深色模式</button>
+    </nav>
+
+    <!-- 搜索框 -->
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索文章...">
+    </div>
+
+    <!-- 文章列表 -->
+    <div class="articles" id="articles">
+        <!-- 第一篇 -->
+        <div class="article-card">
+            <h2>第一天学HTML：标签是什么？</h2>
+            <div class="article-meta">2026-08-07 · 标签：HTML</div>
+            <div class="article-content">
+                <p>HTML 就像搭积木，每个标签是一块积木。p 是段落，h1 是大标题，img 是图片。</p>
+                <p>口诀：HTML 管"有什么"，CSS 管"长什么样"，JS 管"能做什么"。</p>
+            </div>
+            <div class="toggle-hint">点击展开 / 收起</div>
+        </div>
+        <!-- 第二篇 -->
+        <div class="article-card">
+            <h2>第二天学CSS：给网页化妆</h2>
+            <div class="article-meta">2026-08-08 · 标签：CSS</div>
+            <div class="article-content">
+                <p>CSS 是网页的化妆品。颜色、字体、大小、间距全靠它。写法：选择器 { 属性: 值; }</p>
+                <p>常用选择器：标签名（p）、类名（.btn）、ID（#header）。类名可重复，ID 只能用一次。</p>
+            </div>
+            <div class="toggle-hint">点击展开 / 收起</div>
+        </div>
+        <!-- 第三篇 -->
+        <div class="article-card">
+            <h2>第三天学JavaScript：让网页动起来</h2>
+            <div class="article-meta">2026-08-09 · 标签：JavaScript</div>
+            <div class="article-content">
+                <p>JS 让网页活过来。点击有反应、输入有提示、不刷新就能更新内容。</p>
+                <p>三步公式：1.找到元素 2.监听事件 3.改变样式或内容。</p>
+            </div>
+            <div class="toggle-hint">点击展开 / 收起</div>
+        </div>
+    </div>
+
+    <!-- 无搜索结果提示 -->
+    <div class="no-result" id="noResult">没有找到相关文章～</div>
+
+    <!-- 页脚 -->
+    <footer>© 2026 我的小博客 · HTML + CSS + JavaScript</footer>
+
+    <script>
+        // ===== 功能1：点击文章展开/收起 =====
+        // 找到所有文章卡片，遍历每张，绑定点击事件切换 active 类
+        const cards = document.querySelectorAll('.article-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => card.classList.toggle('active'));
+        });
+
+        // ===== 功能2：搜索过滤文章 =====
+        const searchInput = document.getElementById('searchInput');
+        const noResult = document.getElementById('noResult');
+        // 每次输入都触发：遍历卡片，文字包含关键词则显示，否则隐藏
+        searchInput.addEventListener('input', () => {     //input事件：实时搜索，每输入一个字就触发一次搜索
+            const keyword = searchInput.value.toLowerCase().trim();  
+            //toLowerCaes():全转为小写 trim（）：去掉首尾空格
+            let matchCount = 0;
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(keyword))   //判断是否含有搜索的关键词 
+                {   card.style.display = 'block';  //如果包含就显示
+                    matchCount++;
+                } else {
+                    card.style.display = 'none';  //否则不显示
+                }
+            });
+            // 一篇都没匹配到就显示提示
+            noResult.style.display = matchCount === 0 ? 'block' : 'none';
+        });
+
+        // ===== 功能3：深色/浅色模式切换 =====
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            // 根据当前模式切换按钮文字
+            themeBtn.textContent = document.body.classList.contains('dark') ? '浅色模式' : '深色模式';
+        });
+    </script>
+</body>
+</html>

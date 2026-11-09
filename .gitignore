@@ -1,0 +1,10 @@
+# Python 虚拟环境
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+
+# OS
+Thumbs.db
+.DS_Store
